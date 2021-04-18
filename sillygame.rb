@@ -1,5 +1,7 @@
 #to share this with people who don't know command line I can send them to: https://www.onlinegdb.com/online_ruby_compiler
 
+#Z4x82mAjpUVUXiQ
+
 require "./pickup"
 
 #preparing stuff
@@ -27,7 +29,7 @@ end
 
 #other stuff
 @inventory = []
-currentroom = @clownroom
+@currentroom = @clownroom
 
 
 #room content
@@ -43,7 +45,7 @@ currentroom = @clownroom
 
 @hashy = {t: "\nYou are in a room with a clown statue and a sword lying on the ground. Do you want to take the door to the east, the door to the west, or pick up the sword?\n\n", m: ["East", "West", "Pick up the sword"], o: [@hubroom, @appleroom, @clownroom], a: @pickup}
 
-  #object class: sword, apple... pickup method, use method
+  #item class: sword, apple... pickup method, use method
 
 @messagesent = false
 @inventorynote = Proc.new do
