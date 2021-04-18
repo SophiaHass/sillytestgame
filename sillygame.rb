@@ -1,5 +1,6 @@
 #to share this with people who don't know command line I can send them to: https://www.onlinegdb.com/online_ruby_compiler
 
+require "./pickup"
 
 #preparing stuff
 
@@ -8,7 +9,7 @@ class Room
 end 
 
 #rooms
-clownroom = Room.new
+@clownroom = Room.new
 hubroom = Room.new
 appleroom = Room.new
 northroom = Room.new
@@ -25,38 +26,31 @@ newtonnote = false
 corpse = false
 
 #other stuff
-inventory = []
-currentroom = clownroom
+@inventory = []
+currentroom = @clownroom
 
 
 #room content
 
-#clownroom
-clownroom.text = "\nYou are in a room with a clown statue and a sword lying on the ground. Do you want to take the door to the east, the door to the west, or pick up the sword?\n\n"
-clownroom.menu1 = "East"
-clownroom.menu2 = "West"
-clownroom.menu3 = "Pick up the sword"
-clownroom.output1 = hubroom
-clownroom.output2 = appleroom
-clownroom.output3 = clownroom 
+#@clownroom
+@clownroom.text = "\nYou are in a room with a clown statue and a sword lying on the ground. Do you want to take the door to the east, the door to the west, or pick up the sword?\n\n"
+@clownroom.menu1 = "East"
+@clownroom.menu2 = "West"
+@clownroom.menu3 = "Pick up the sword"
+@clownroom.output1 = hubroom
+@clownroom.output2 = appleroom
+@clownroom.output3 = @clownroom 
 
 messagesent = false
-inventorynote = Proc.new do
-  if inventory.empty? && messagesent == false
+@inventorynote = Proc.new do
+  if @inventory.empty? && messagesent == false
     print " Type 'i' into the console at any time to see the inventory." 
   end
   messagesent = true
 end
 
-pickup = Proc.new do
-  print "\nYou have the sword."
-  inventorynote.call
-  print "\n\n"
-  clownroom.text = "You are in a room with a clown statue. Do you want to take the door to the east or the door to the west?\n\n"
-  clownroom.menu3 = nil
-  inventory << "Sword"
-  end
-clownroom.action3 = pickup
+
+@clownroom.action3 = @pickup
 
 #hubroom
 hubroom.text = "\nYou are in a room with four doors. Do you want to go to the room with the clown statue, or take the door to the east, north, or south?\n\n"
@@ -67,7 +61,7 @@ hubroom.menu4 = "Go to the clown room"
 hubroom.output1 = hubroom
 hubroom.output2 = northroom
 hubroom.output3 = southroom
-hubroom.output4 = clownroom
+hubroom.output4 = @clownroom
 
 pikalock = Proc.new do
   puts "\nYou examine the lock a little closer. 
@@ -77,8 +71,8 @@ That's it! Now that you think about it, your pika is a TIBETAN pika, not an Amer
 You put your Tibetan pika in the Tibetan-pika shaped lock, and turn.
 
 The door swings open with a satisfying *click*. You give your pika a high five.\n"
-inventory.delete "Pika (presumed American)"
-inventory << "Tibetan pika"
+@inventory.delete "Pika (presumed American)"
+@inventory << "Tibetan pika"
 hubroom.text = "\nYou are in a room with four doors. The door to the east is finally open.\n\n"
 hubroom.menu1 = "Take the east door"
 hubroom.output1 = watermelonroom
@@ -86,7 +80,7 @@ hubroom.action1 = nil
 end
 
 forcelock = Proc.new do
-  if inventory.include? "Sword"
+  if @inventory.include? "Sword"
     puts "\nYou draw your sword, narrow your eyes, and concentrate. You stare deep into the Tibetan pika shaped keyhole. Your muscles tense... 
 ...
 ...
@@ -95,7 +89,7 @@ forcelock = Proc.new do
   else puts "\nYou kick the door. It hurts.\n"
     forced = true
   end
-  if inventory.include? "Pika (presumed American)"
+  if @inventory.include? "Pika (presumed American)"
     hubroom.text = "\nYou are in a room with four doors. You have the impulse to examine the lock on the east door a little closer.\n\n"
     hubroom.menu1 = "Examine the east door lock more closely"
     hubroom.action1 = pikalock
@@ -115,13 +109,13 @@ hubroom.action1 = nokey
 
 #northroom
 knock = Proc.new do
-  if inventory.include? "Sword"
+  if @inventory.include? "Sword"
     puts "\nYou slice the pancakes into pieces with your sword! You look extremely cool.\n"
   else puts "\nYou push the stack over.\n"
   end
   print "\nThe pancakes collapse. You see a glint of something metallic fall and land on top of the delicious, messy pile. It turns out to be the broken half of a key. You put it in your backpack."
-  inventorynote.call
-  inventory << "Top half of a key"
+  @inventorynote.call
+  @inventory << "Top half of a key"
   puts "\n"
   northroom.text = "\nThis room contains a sticky, slimy pile of cold pancakes. They look like they have learnt their lesson.\n\n"
   northroom.menu1 = "Go south"
@@ -154,9 +148,9 @@ northroom.output2 = northroom
 
 loot = Proc.new do 
 print "\nIn the chest you find one half of a broken key. You put it in your backpack."
-inventorynote.call
+@inventorynote.call
 puts "\n"
-inventory << "Bottom half of a key"
+@inventory << "Bottom half of a key"
 southroom.text = "\nThis room contains a looted, medieval-style wooden chest with a note on it saying 'definitely not relevant to the plot'.\n\n"
 southroom.menu1 = "Go north"
 southroom.menu2 = nil
@@ -179,7 +173,7 @@ appleeat = Proc.new do
   puts "\nYou ate the apple. Nothing peculiar happens.\n"
   appleroom.text = "\nYou're in a room with a conspicuous absence of apple. Do you want to go east, back to the clown statue room, or west?\n\n"
   appleroom.menu1 = "Go back to the clown statue room"
-  appleroom.output1 = clownroom 
+  appleroom.output1 = @clownroom 
   appleroom.menu2 = "Go west"
   appleroom.output2 = stairsroom 
   appleroom.action1 = nil
@@ -190,7 +184,7 @@ appledont = Proc.new do
   puts "\nYou put the apple in a cupboard, to avoid temptation.\n"
   appleroom.text = "\nYou're in a room with a conspicuous absence of apple. Do you want to go east back to the clown statue room, or west?\n\n"
   appleroom.menu1 = "Go back to the clown statue room"
-  appleroom.output1 = clownroom 
+  appleroom.output1 = @clownroom 
   appleroom.menu2 = "Go west"
   appleroom.output2 = stairsroom 
   appleroom.action1 = nil
@@ -230,9 +224,9 @@ newmenu = Proc.new do
 end
 
 fight = Proc.new do
-  if inventory.include? "Sword"
+  if @inventory.include? "Sword"
     puts "\nYou draw your sword and cut off your future head from your future body. The sword snaps in half! You toss the broken sword away. Something tells you this was a bad idea.\n"
-    inventory.delete("Sword")
+    @inventory.delete("Sword")
     corpse = true
   else
     puts "\nYou pummel your future self ineffectually. After a brief scuffle a time portal opens up and your future self disappears into it, leaving you with nothing but bruised fists and a feeling of foolishness.\n"
@@ -284,7 +278,7 @@ A long, awkward silence. You instead turn to Einstein, 'How are your relatives?'
 'Excuse us, but we're having a PRIVATE conversation here!' snaps Newton.
 
 'Yeesh, no need to get all equal and opposite,' you say, and get back up.\n"
-  if inventory.include? "+1 Mithril Armor" #I know some of the list items here are redundant, but it seems less confusing to me to have a complete list of all the menu items, actions and outputs.
+  if @inventory.include? "+1 Mithril Armor" #I know some of the list items here are redundant, but it seems less confusing to me to have a complete list of all the menu items, actions and outputs.
     uproom.menu1 = "Go back down" 
     uproom.menu2 = nil
     uproom.menu3 = nil  
@@ -308,9 +302,9 @@ end
 don = Proc.new do
   print "\nYou don the armor. You feel very prepared for anything that might happen from now on."
   uproom.text = "\nAt the top of the spiral staircase is a weightless void. Albert Einstein sits at a parisian-style cafe table across from Isaac Newton, drinking tea from fine bone china.\n\n"
-  inventorynote.call
+  @inventorynote.call
   print "\n"
-  inventory << "+1 Mithril Armor"
+  @inventory << "+1 Mithril Armor"
 
   if uproom.menu1 == "Try to join the conversation"
     uproom.menu1 = "Try to join the conversation"
@@ -344,8 +338,8 @@ pika = Proc.new do
   
   downroom.text = "\nThis room is empty except for (approximately) #{rand(1001..9999)} losing lottery tickets, with a pika-shaped depression in the middle of them.\n\n"
   puts "\nThe pika squeaks.\n"
-  inventory << "Pika (presumed American)"
-  inventorynote.call
+  @inventory << "Pika (presumed American)"
+  @inventorynote.call
   if forced == true
     hubroom.text = "\nYou are in a room with four doors. You have the impulse to examine the lock on the east door a little closer.\n\n"
     hubroom.menu1 = "Examine the lock more closely"
@@ -405,7 +399,7 @@ outcome = nil
   yourround = Proc.new do
     
     #determines damage and adjusts text, depending on sword
-    if inventory.include? "Sword" 
+    if @inventory.include? "Sword" 
       smashy = rand(5..20) + 2 
       slic = "slic"
     else
@@ -495,7 +489,7 @@ watermelonbattle = Proc.new do
   puts "\nYou wish you had found some way of killing your future self which hadn't meant breaking your sword. But that bastard had it coming. Trust me, says your internal dialogue. I know.\n\n" if corpse == true && losecounter == 9
   puts "\nYou're pretty sure that with this algorithm it's just about possible to win a watermelon battle without your sword. And you refuse to reset and avoid killing your future self in another playthrough just so you can keep your sword. That blighter DESERVED it.'\n\n" if corpse == true && losecounter == 11
 
-  puts "\nYou remember that sword which you left lying around... maybe that could help...\n\n" if corpse == false && !(inventory.include? "Sword") && (losecounter % 3 == 0) && !(losecounter == 0)
+  puts "\nYou remember that sword which you left lying around... maybe that could help...\n\n" if corpse == false && !(@inventory.include? "Sword") && (losecounter % 3 == 0) && !(losecounter == 0)
   
   #new text for future battles
   watermelonroom.text = "
@@ -564,10 +558,10 @@ THE END"
   action4 = currentroom.action4 if currentroom.action4
 
   #key (maybe better elsewhere?)
-  if (inventory.include? "Bottom half of a key") && (inventory.include? "Top half of a key")
+  if (@inventory.include? "Bottom half of a key") && (@inventory.include? "Top half of a key")
   puts "\nThe two halves of the key attract each other with such force that they explode on impact! Turns out they were neodymium magnets. Who knew.\n"
-  inventory.delete("Bottom half of a key")
-  inventory.delete("Top half of a key")
+  @inventory.delete("Bottom half of a key")
+  @inventory.delete("Top half of a key")
   end
 
   #print text
@@ -579,7 +573,7 @@ THE END"
   puts "4. #{currentroom.menu4}" if currentroom.menu4
 
   #suspicious (This would probably be better placed elsewhere...)
-  northroom.text = "\nThat stack of pancakes looks REALLY suspicious.\n\n" if suspicious == true && !(inventory.include? "Top half of a key")
+  northroom.text = "\nThat stack of pancakes looks REALLY suspicious.\n\n" if suspicious == true && !(@inventory.include? "Top half of a key")
 
   #input and processing
   input = gets.chomp
@@ -602,13 +596,13 @@ THE END"
       action4.call if currentroom.action4
       currentroom = output4    
     when "i" 
-      if inventory.empty? && applecore == true
+      if @inventory.empty? && applecore == true
         puts "\nYou look in your backpack. There is a mummified apple core inside. Not daring to touch it directly, you tip it out.\n"
         applecore = false
-      elsif inventory.empty?
+      elsif @inventory.empty?
         puts "\nYou look in your backpack. It contains a conspicuous lack of apples.\n"
       else
-        puts "\nInventory contents:", inventory
+        puts "\nInventory contents:", @inventory
       end
     when "q"
       break
